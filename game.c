@@ -1,15 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <termios.h>
-#include <time.h>
+#include "settings.c"
 
-#define HEIGHT 20
-#define WIDTH 40
-#define PIPE_GAP 5
-#define PIPE_SPEED 1
-#define GRAVITY 1
-#define JUMP_STRENGTH -2
 
 struct termios oldt, newt;
 
@@ -21,6 +11,15 @@ typedef struct {
     int gapY;
     int score;
 } GameState;
+
+
+struct rect {
+    int x; // x coordinate (top left)
+    int y; // y coordinate (top left)
+    int width; 
+    int height; 
+    int color; 
+};
 
 
 // init functions
