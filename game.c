@@ -1,7 +1,11 @@
 #include "settings.c"
 
 
-struct termios oldt, newt;
+typedef struct {
+    int x;        // left side of the pipe
+    int gapY;     // top of the gap
+    int width;    // usually 3–5 chars wide
+} Pipe;
 
 /// Game state struct
 typedef struct {
@@ -9,6 +13,7 @@ typedef struct {
     int velocity;
     int pipeX;
     int gapY;
+    Pipe pipes[MAX_PIPES];
     int score;
 } GameState;
 
