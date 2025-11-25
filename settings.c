@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <termios.h>
 #include <time.h>
 #include <stdint.h>
 
@@ -27,7 +26,7 @@ struct rect {
     int y; // y coordinate (top left)
     int width; 
     int height; 
-    uint16_t color; 
+    uint8_t color; 
 };
 
 
