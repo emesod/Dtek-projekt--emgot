@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <time.h>
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
 #include <stdint.h>
 
 #define HEIGHT 150
@@ -12,21 +11,19 @@
 #define JUMP_STRENGTH -2
 #define MAX_PIPES 3
 #define PIPE_WIDTH 30
-#define PIPE_SPACING 100 
+#define PIPE_SPACING 100
 
-/// Screen settings
 #define VGA_DEFAULT_WIDTH 320
 #define VGA_DEFAULT_HEIGHT 240
 #define VGA_DEFAULT_BASE_ADDRESS 0x08000000UL
 
-
-/// structs
 struct rect {
-    int x; // x coordinate (top left)
-    int y; // y coordinate (top left)
-    int width; 
-    int height; 
-    uint8_t color; 
+    int x;
+    int y;
+    int width;
+    int height;
+    uint8_t color;
 };
 
+#endif /* SETTINGS_H */
 

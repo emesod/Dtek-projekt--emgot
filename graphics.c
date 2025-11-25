@@ -1,7 +1,16 @@
-#include "settings.c"
+#include "graphics.h"
 #include <stdint.h>
 #include <stddef.h>
 
+static inline int min_int(int a, int b)
+{
+    return (a < b) ? a : b;
+}
+
+static inline int max_int(int a, int b)
+{
+    return (a > b) ? a : b;
+}
 
 static volatile uint8_t *screen_buffer = (volatile uint8_t *)VGA_DEFAULT_BASE_ADDRESS;
 static int screen_buffer_width = VGA_DEFAULT_WIDTH;
@@ -24,10 +33,10 @@ void draw_pixel(int x, int y, uint8_t color) {
 
 void fill_rect(const struct rect *r) {
 
-    int x_start = max(0, min(r->x, screen_buffer_width - 1));
-    int y_start = max(0, min(r->y, screen_buffer_height - 1));
-    int x_end = max(0, min(r->x + r->width, screen_buffer_width));
-    int y_end = max(0, min(r->y + r->height, screen_buffer_height));
+    int x_start = max_int(0, min_int(r->x, screen_buffer_width - 1));
+    int y_start = max_int(0, min_int(r->y, screen_buffer_height - 1));
+    int x_end = max_int(0, min_int(r->x + r->width, screen_buffer_width));
+    int y_end = max_int(0, min_int(r->y + r->height, screen_buffer_height));
 
     for (int y = y_start; y < y_end; ++y) {
         volatile uint8_t *row = screen_buffer + y * screen_buffer_width;
