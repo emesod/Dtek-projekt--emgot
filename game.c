@@ -1,6 +1,6 @@
 #include "graphics.h"
 
-GameState gs;
+volatile GameState gs;
 int game_running = 1;
 
 
@@ -41,26 +41,35 @@ void initInterruptTimer(void)
     *control = 6;    // enable timer + interrupt
 }
 
-/* 
-applyGravity(GameState *gs){
 
+void applyGravity(GameState *gs){
+      gs->velocity += GRAVITY;
+    if (gs->velocity > MAX_FALL_SPEED)
+        gs->velocity = MAX_FALL_SPEED;
+
+    gs->birdY += gs->velocity;
+
+    // --- death check ---
+    if (gs->birdY < 0 || gs->birdY >= HEIGHT) {
+        printf("you died :(\n");
+        game_running = 0;
+    }
 }
-*/
 
 int checkCollision(GameState *gs) {
-    int birdX = 5; // bird is always in the middle of the screen
+    int birdX = 5;  // birds X position
+    int birdY = gs->birdY;
 
     for (int i = 0; i < MAX_PIPES; i++) {
         Pipe *p = &gs->pipes[i];
 
-        // compare x-coordinate for pipe and bird
+        // horizontal collision
         if (birdX >= p->x && birdX < p->x + p->width) {
 
-            // top pipe collision
-            if (gs->birdY < p->gapY) return 1;
-
-            // bottom pipe collision
-            if (gs->birdY > p->gapY + PIPE_GAP) return 1;
+            // vertical collision
+            if (birdY >= p->y && birdY < p->y + p->height) {
+                return 1; 
+            }
         }
     }
 
@@ -68,11 +77,11 @@ int checkCollision(GameState *gs) {
 }
 
 // ----input-----
-processInput(GameState *gs){
+void processInput(GameState *gs){
 int btn = get_btn();
 
     if (btn != 0) {
-        gs->velocity = JUMP_STRENGTH;
+        gs->velocity = -JUMP_STRENGTH;
     }
 }
 
@@ -81,7 +90,7 @@ int get_btn(void){
   return *button_status;
 }
 
-// ------------Score----------
+// ------------Score---------- 
 
 void updateScore(GameState *gs) { // When pipe moves left past the bird
     if (gs->pipeX == 1) {   
@@ -101,7 +110,7 @@ void handle_interrupt(unsigned cause)
         *status = 0;
 
         processInput(&gs);
-        //applyGravity(&gs);
+        applyGravity(&gs);
         //updatePipes(&gs);
 
         if (checkCollision(&gs)) {
@@ -112,9 +121,16 @@ void handle_interrupt(unsigned cause)
 }
 //  ------------------main----------------
 int main(int argc, char const *argv[]){
-
     initGame(&gs);
     initInterruptTimer();
+    enable_interrupts();
+
+    while (game_running) {
+        // interrups handle everything
+    }
+
+    printf("Game over! Score: %d\n", gs.score);
+    return 0;
 }
 
 
