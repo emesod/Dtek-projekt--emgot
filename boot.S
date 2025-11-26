@@ -133,23 +133,20 @@ enable_interrupt:
     or   t0, t0, t1 // Make sure we only modify bit 11
     csrw mie, t0 // Write back onto the register
 
-	
-
-	csrr t0, mie
+    csrr t0, mie
     li   t1, (1 << 16) // Bit 16 = MEIE 
     or   t0, t0, t1
     csrw mie, t0
 
-	
-	csrr t0, mie
-    li   t1, (1 << 17) // Bit 17 = hopefully swithces 
+    csrr t0, mie
+    li   t1, (1 << 17) // Bit 17 = hopefully switches 
     or   t0, t0, t1
     csrw mie, t0
 
-	csrr t0, mstatus
+    csrr t0, mstatus
     li   t1, (1 << 3) // Bit 3 = MIE
     or   t0, t0, t1
     csrw mstatus, t0
 
-	ret
+    ret
 
