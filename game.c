@@ -64,14 +64,13 @@ int checkCollision(GameState *gs) {
     for (int i = 0; i < MAX_PIPES; i++) {
         Pipe *p = &gs->pipes[i];
 
-        // compare x-coordinate for pipe and bird
+        // horizontal collision
         if (birdX >= p->x && birdX < p->x + p->width) {
 
-            // top pipe collision
-            if (gs->birdY < p->gapY) return 1;
-
-            // bottom pipe collision
-            if (gs->birdY > p->gapY + PIPE_GAP) return 1;
+            // vertical collision
+            if (birdY >= p->y && birdY < p->y + p->height) {
+                return 1; 
+            }
         }
     }
 
@@ -79,23 +78,20 @@ int checkCollision(GameState *gs) {
 }
 
 // ----input-----
-int get_btn(void){
-    volatile int* button_status = (volatile int*) 0x040000d0;
-    return *button_status;
-  }
-  
-
-
 void processInput(GameState *gs){
-    int btn = get_btn();
+int btn = get_btn();
 
     if (btn != 0) {
-        gs->velocity = JUMP_STRENGTH;
+        gs->velocity = -JUMP_STRENGTH;
     }
 }
 
+int get_btn(void){
+  volatile int* button_status = (volatile int*) 0x040000d0;
+  return *button_status;
+}
 
-// ------------Score----------
+// ------------Score---------- 
 
 void updateScore(GameState *gs) { // When pipe moves left past the bird
     if (gs->pipeX == 1) {   
@@ -104,9 +100,7 @@ void updateScore(GameState *gs) { // When pipe moves left past the bird
 }
 
 void showScore(GameState *gs) {
-    print("Score: ");
-    print_dec(gs->score);
-    print("\n");
+    printf("Score: %d\n", gs->score);
 }
 
 void handle_interrupt(unsigned cause)
@@ -117,7 +111,7 @@ void handle_interrupt(unsigned cause)
         *timer_status = 0;
 
         processInput(&gs);
-        //applyGravity(&gs);
+        applyGravity(&gs);
         //updatePipes(&gs);
         
 

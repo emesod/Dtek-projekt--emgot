@@ -12,6 +12,8 @@
 #define MAX_PIPES 3
 #define PIPE_WIDTH 30
 #define PIPE_SPACING 100
+#define GRAVITY 1
+#define MAX_FALL_SPEED 10
 
 #define VGA_DEFAULT_WIDTH 320
 #define VGA_DEFAULT_HEIGHT 240
@@ -26,9 +28,10 @@ struct rect {
 };
 
 typedef struct {
-    int x;        // left side of the pipe
-    int gapY;     // top of the gap
-    int width;    // usually 3–5 chars wide
+    int x;
+    int y;
+    int width;
+    int height; 
 } Pipe;
 
 /// ---------Game state struct------------------
