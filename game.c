@@ -52,11 +52,21 @@ void initInterruptTimer(void)
     print("Interrupt timer initialized\n");
 }
 
-/* 
-applyGravity(GameState *gs){
 
+void applyGravity(GameState *gs){
+      gs->velocity += GRAVITY;
+    if (gs->velocity > MAX_FALL_SPEED)
+        gs->velocity = MAX_FALL_SPEED;
+
+    gs->birdY += gs->velocity;
+
+    // --- death check ---
+    if (gs->birdY < 0 || gs->birdY >= HEIGHT) {
+        printf("you died :(\n");
+        game_running = 0;
+    }
 }
-*/
+
 
 int checkCollision(GameState *gs) {
     int birdX = 5; // bird is always in the middle of the screen
