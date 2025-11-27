@@ -71,6 +71,7 @@ void applyGravity(GameState *gs){
       game_running = 0;
   }
 }
+*/
 
 int checkCollision(GameState *gs) {
     int birdX = 50; // bird is always in the middle of the screen
