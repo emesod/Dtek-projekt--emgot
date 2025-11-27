@@ -3,12 +3,12 @@
 
 #include <stdint.h>
 
-#define HEIGHT 150
-#define WIDTH 40
-#define PIPE_GAP 5
+#define HEIGHT 240
+#define WIDTH 320
+#define PIPE_GAP 50
 #define PIPE_SPEED 1
 #define GRAVITY 1
-#define JUMP_STRENGTH -2
+#define JUMP_STRENGTH 10
 #define MAX_PIPES 3
 #define PIPE_WIDTH 30
 #define PIPE_SPACING 100

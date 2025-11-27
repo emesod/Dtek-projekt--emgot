@@ -22,6 +22,11 @@ void resetPipe(GameState *gs) {
     gs->gapY = (HEIGHT - PIPE_GAP - 1);
 }
 
+void updatePipes(GameState *gs) {
+   
+        gs->pipeX -= PIPE_SPEED;
+    
+}
 
 /// -------------Game-----------
 
@@ -52,15 +57,24 @@ void initInterruptTimer(void)
     print("Interrupt timer initialized\n");
 }
 
-/* 
-applyGravity(GameState *gs){
+void applyGravity(GameState *gs){
+    gs->velocity += GRAVITY;
+  if (gs->velocity > MAX_FALL_SPEED)
+      gs->velocity = MAX_FALL_SPEED;
 
+  gs->birdY += gs->velocity;
+    print_dec(gs->velocity);
+    print("\n");
+  // --- death check ---
+  if (gs->birdY < 0 || gs->birdY >= HEIGHT) {
+      print("you died :(\n");
+      game_running = 0;
+  }
 }
-*/
 
 int checkCollision(GameState *gs) {
-    int birdX = 5; // bird is always in the middle of the screen
-
+    int birdX = 50; // bird is always in the middle of the screen
+    int birdY = gs->birdY;
     for (int i = 0; i < MAX_PIPES; i++) {
         Pipe *p = &gs->pipes[i];
 
@@ -80,7 +94,8 @@ int checkCollision(GameState *gs) {
 // ----input-----
 void processInput(GameState *gs){
 int btn = get_btn();
-
+    print(btn);
+    print("\n");
     if (btn != 0) {
         gs->velocity = -JUMP_STRENGTH;
     }
@@ -100,7 +115,7 @@ void updateScore(GameState *gs) { // When pipe moves left past the bird
 }
 
 void showScore(GameState *gs) {
-    printf("Score: %d\n", gs->score);
+   // printf("Score: %d\n", gs->score);
 }
 
 void handle_interrupt(unsigned cause)
@@ -112,23 +127,36 @@ void handle_interrupt(unsigned cause)
 
         processInput(&gs);
         applyGravity(&gs);
-        //updatePipes(&gs);
+        updatePipes(&gs);
         
 
         if (checkCollision(&gs)) {
             print("Death\n");
         }
 
-        struct rect r;
-        r.x = 100;
-        r.y = 60;
-        r.width = 120;
-        r.height = 60;
-        r.color = rgb332(7, 7, 0); // Bright yellow in rgb332
+        struct rect bird_rect = {0, 0, 0, 0, 0};
+        bird_rect.x = 50;
+        bird_rect.y = gs.birdY;
+        bird_rect.width = 50;
+        bird_rect.height = 30;
+        bird_rect.color = rgb332(7, 7, 0);
+        clear_screen(rgb332(0,0,0));
+        fill_rect(&bird_rect);
 
-        rect.x += 1;
-        clear_screen(rgb332(0,0,0)); // Clear to black
-        fill_rect(&r);
+        struct rect pipe_rect = {0, 0, 0, 0, 0};
+        pipe_rect.x = gs.pipeX;
+        pipe_rect.y = 0;
+        pipe_rect.width = 20;
+        pipe_rect.height = 100;
+        pipe_rect.color = rgb332(5, 0, 0);
+        fill_rect(&pipe_rect);
+
+        pipe_rect.x = gs.pipeX;
+        pipe_rect.y = HEIGHT - PIPE_GAP - 1;
+        pipe_rect.width = 20;
+        pipe_rect.height = PIPE_GAP;
+        pipe_rect.color = rgb332(0, 5, 0);
+        fill_rect(&pipe_rect);
 
     }
 }
