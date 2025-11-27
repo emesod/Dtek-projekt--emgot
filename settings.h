@@ -44,6 +44,5 @@ typedef struct {
     int score;
 } GameState;
 
-
 #endif /* SETTINGS_H */
 
