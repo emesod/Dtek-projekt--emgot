@@ -4,6 +4,7 @@
 #include "settings.h"
 #include <stdint.h>
 
+void swap_buffers(void);
 void clear_screen(uint8_t color);
 void draw_pixel(int x, int y, uint8_t color);
 void fill_rect(const struct rect *r);

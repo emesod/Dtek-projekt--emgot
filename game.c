@@ -57,7 +57,7 @@ void updatePipes(GameState *gs)
 void initInterruptTimer(void)
 {
     int timer_base = 0x04000020;
-    int cycles = 3000000 - 1; // 30000 MHz, 10ms frame
+    int cycles = 1500000 - 1; // 30000 MHz, 10ms frame
 
     volatile unsigned short *period_l = (volatile unsigned short *)(timer_base + 0x08);
     volatile unsigned short *period_h = (volatile unsigned short *)(timer_base + 0x0C);
@@ -212,7 +212,7 @@ void handle_interrupt(unsigned cause)
         }
 
 
-        clear_screen(rgb332(0, 1, 3));
+        clear_screen(rgb332(0, 0, 0));
 
 
         for (int i = 0; i < MAX_PIPES; i++)
@@ -238,7 +238,10 @@ void handle_interrupt(unsigned cause)
             fill_rect(&bottom);
         }
          // bird
-        draw_sprite(test_sprite, 50, gs.birdY, 30, 30);
+        draw_sprite(bird_sprite, 50, gs.birdY, 30, 30);
+        
+        // Swap buffers after all drawing is complete
+        swap_buffers();
     }
 }
 //  ------------------main----------------
