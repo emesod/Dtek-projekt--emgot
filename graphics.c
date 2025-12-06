@@ -46,6 +46,17 @@ void fill_rect(const struct rect *r) {
     }
 }
 
+void draw_sprite(const uint8_t *spritemap, int sprite_x, int sprite_y, 
+                 int sprite_width, int sprite_height) {
+    for (int y = 0; y < sprite_height; ++y) {
+        for (int x = 0; x < sprite_width; ++x) {
+            int index = y * sprite_width + x;
+            uint8_t color = spritemap[index];
+            draw_pixel(sprite_x + x, sprite_y + y, color);
+        }
+    }
+}
+
 uint8_t rgb332(uint8_t r, uint8_t g, uint8_t b) {
     return ((r & 0x07) << 5) | ((g & 0x07) << 2) | (b & 0x03);
 }

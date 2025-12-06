@@ -1,13 +1,13 @@
 #include "graphics.h"
 #include "settings.h"
 #include "dtekv-lib.h"
+#include "sprites.h"
 #include <stdlib.h>
 
 int game_running = 1;
 GameState gs;
 
 extern void enable_interrupt(void);
-
 static unsigned int seed = 1234567;
 
 int my_rand(void)
@@ -238,13 +238,7 @@ void handle_interrupt(unsigned cause)
             fill_rect(&bottom);
         }
          // bird
-        struct rect bird_rect;
-        bird_rect.x = 50;
-        bird_rect.y = gs.birdY;
-        bird_rect.width = 30;
-        bird_rect.height = 30;
-        bird_rect.color = rgb332(7, 7, 0);
-        fill_rect(&bird_rect);
+        draw_sprite(test_sprite, 50, gs.birdY, 30, 30);
     }
 }
 //  ------------------main----------------

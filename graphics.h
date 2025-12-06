@@ -7,6 +7,7 @@
 void clear_screen(uint8_t color);
 void draw_pixel(int x, int y, uint8_t color);
 void fill_rect(const struct rect *r);
+void draw_sprite(const uint8_t *spritemap, int sprite_x, int sprite_y, int sprite_width, int sprite_height);
 uint8_t rgb332(uint8_t r, uint8_t g, uint8_t b);
 
 #endif /* GRAPHICS_H */
