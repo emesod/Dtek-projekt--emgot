@@ -30,6 +30,12 @@ void initGame(GameState *gs)
     }
 }
 
+void restartGame(GameState *gs)
+{
+    initGame(gs);       // reset everything
+    gs->isDead = 0;     // bird lives again
+}
+
 void updatePipes(GameState *gs)
 {
     for (int i = 0; i < MAX_PIPES; i++)
@@ -129,9 +135,15 @@ int get_btn(void)
 }
 
 void processInput(GameState *gs){
-    if (gs->isDead) return;     
-
     int btn = get_btn();
+    if (gs->isDead) {
+        if (btn != 0) {
+            print("Restarting game.\n");
+            restartGame(gs);
+        }
+        return;
+    }    
+
     if (btn != 0)
     {
         gs->velocity = -JUMP_STRENGTH;
