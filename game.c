@@ -32,8 +32,8 @@ void initGame(GameState *gs)
 
 void restartGame(GameState *gs)
 {
-    initGame(gs);       // reset everything
-    gs->isDead = 0;     // bird lives again
+    initGame(gs);   // reset everything
+    gs->isDead = 0; // bird lives again
 }
 
 void updatePipes(GameState *gs)
@@ -79,18 +79,10 @@ void initInterruptTimer(void)
     print("Interrupt timer initialized\n");
 }
 
-void applyGravity(GameState *gs)
+void deadBird(GameState *gs)
 {
-    gs->velocity += GRAVITY;
-    if (gs->velocity > MAX_FALL_SPEED)
-        gs->velocity = MAX_FALL_SPEED;
-
-    gs->birdY += gs->velocity;
-}
-
-void deadBird(GameState *gs){
-    gs->isDead = 1; // mark the bird as dead
-    gs->velocity = 2;
+    gs->isDead = 1;
+    gs->velocity = GRAVITY; 
 }
 
 int checkDeath(GameState *gs)
@@ -100,32 +92,26 @@ int checkDeath(GameState *gs)
     int birdW = 30;
     int birdH = 30;
 
+    // Collision with pipes
     for (int i = 0; i < MAX_PIPES; i++)
     {
         Pipe *p = &gs->pipes[i];
-
         int pipeLeft = p->x;
         int pipeRight = p->x + PIPE_WIDTH;
 
-        // Check if bird is horizontally inside pipe
         if (birdX + birdW > pipeLeft && birdX < pipeRight)
         {
-
-            // If bird is above gap or below gap there is a collision
-            if (birdY < p->gapY ||
-                birdY + birdH > p->gapY + PIPE_GAP)
-            {
-                return 1;
-            }
+            if (birdY < p->gapY || birdY + birdH > p->gapY + PIPE_GAP)
+                return 1; // hit pipe
         }
     }
-    if (gs->birdY < 0 || gs->birdY >= HEIGHT)
-    {
-        return 1;
-    }
-    return 0;
-}
 
+    // Top or bottom collision
+    if (birdY < 0 || birdY + birdH > HEIGHT)
+        return 1; 
+
+    return 0; // alive
+}
 // ----input-----
 
 int get_btn(void)
@@ -134,15 +120,18 @@ int get_btn(void)
     return *button_status;
 }
 
-void processInput(GameState *gs){
+void processInput(GameState *gs)
+{
     int btn = get_btn();
-    if (gs->isDead) {
-        if (btn != 0) {
+    if (gs->isDead)
+    {
+        if (btn != 0)
+        {
             print("Restarting game.\n");
             restartGame(gs);
         }
         return;
-    }    
+    }
 
     if (btn != 0)
     {
@@ -152,8 +141,7 @@ void processInput(GameState *gs){
 
 // ------------Score----------
 
-void updateScore(GameState *gs)
-{ // When bird moves left past the pipe
+void updateScore(GameState *gs){ // When bird moves left past the pipe
     int birdX = 50;
 
     for (int i = 0; i < MAX_PIPES; i++)
@@ -172,9 +160,74 @@ void updateScore(GameState *gs)
     }
 }
 
-void showScore(GameState *gs)
+void updateBird(GameState *gs)
 {
-    // printf("Score: %d\n", gs->score);
+    // apply gravity if alive
+    if (!gs->isDead)
+    {
+        gs->velocity += GRAVITY;
+        if (gs->velocity > MAX_FALL_SPEED)
+            gs->velocity = MAX_FALL_SPEED;
+    }
+
+    gs->birdY += gs->velocity;
+
+    // Check death conditions
+    if (!gs->isDead)
+    {
+        if (checkDeath(gs))
+        {
+            deadBird(gs);
+            print("Death\n");
+        }
+    }
+
+    // set position after death check
+    if (gs->birdY < 0)
+        gs->birdY = 0;
+    if (gs->birdY > HEIGHT - 30)
+        gs->birdY = HEIGHT - 30;
+}
+
+void drawScoreText(int score)
+{
+    int x = 5;
+    int y = 5;
+    int digitW = 12;
+    int digitH = 16;
+
+    // Score:
+    for (int i = 0; i < 6; i++){ 
+        draw_sprite(score_text_sprites[i], x, y, digitW, digitH);
+        x += digitW + 2;
+    }
+
+    x += 4; // spacing between word and digits
+
+    // draw digits
+    int digits[10];
+    int count = 0;
+
+    if (score == 0)
+    {
+        digits[count++] = 0;
+    }
+    else
+    {
+        int temp = score;
+        while (temp > 0)
+        {
+            digits[count++] = temp % 10;
+            temp /= 10;
+        }
+    }
+
+    //  digits left then right
+    for (int i = count - 1; i >= 0; i--)
+    {
+        draw_sprite(digit_sprites[digits[i]], x, y, digitW, digitH);
+        x += digitW + 2;
+    }
 }
 
 void handle_interrupt(unsigned cause)
@@ -186,34 +239,14 @@ void handle_interrupt(unsigned cause)
         *timer_status = 0;
 
         processInput(&gs);
-         // Check for death **before** applying gravity
-        if (!gs.isDead && checkDeath(&gs)){
-            print("Death\n");
-            deadBird(&gs);
-        }
+        updateBird(&gs);
 
-        // Apply gravity
-        if (!gs.isDead){
-            applyGravity(&gs);
+        if (!gs.isDead)
+        {
             updatePipes(&gs);
             updateScore(&gs);
-        } else {
-            // for dead bird
-            gs.velocity += GRAVITY / 2;
-            if (gs.velocity > MAX_FALL_SPEED / 2)
-                gs.velocity = MAX_FALL_SPEED / 2;
-            gs.birdY += gs.velocity;
-
-            // Stop bird at bottom
-            if (gs.birdY > HEIGHT - 30){
-                gs.birdY = HEIGHT - 30;
-                gs.velocity = 0;
-            }
         }
-
-
         clear_screen(rgb332(0, 1, 3));
-
 
         for (int i = 0; i < MAX_PIPES; i++)
         {
@@ -237,7 +270,10 @@ void handle_interrupt(unsigned cause)
             bottom.color = rgb332(0, 5, 0);
             fill_rect(&bottom);
         }
-         // bird
+        // score
+        drawScoreText(gs.score);
+
+        // bird
         draw_sprite(test_sprite, 50, gs.birdY, 30, 30);
     }
 }
