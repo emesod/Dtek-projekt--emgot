@@ -5,10 +5,10 @@
 
 #define HEIGHT 240
 #define WIDTH 320
-#define PIPE_GAP 50
-#define PIPE_SPEED 1
+#define PIPE_GAP 100
+#define PIPE_SPEED 3
 #define GRAVITY 1
-#define JUMP_STRENGTH 10
+#define JUMP_STRENGTH 5
 #define MAX_PIPES 3
 #define PIPE_WIDTH 30
 #define PIPE_SPACING 100
@@ -29,19 +29,16 @@ struct rect {
 
 typedef struct {
     int x;
-    int y;
-    int width;
-    int height; 
+    int gapY;
+    int scored;
 } Pipe;
 
-/// ---------Game state struct------------------
 typedef struct {
     int birdY;
     int velocity;
-    int pipeX;
-    int gapY;
     Pipe pipes[MAX_PIPES];
     int score;
+    int isDead;
 } GameState;
 
 #endif /* SETTINGS_H */
