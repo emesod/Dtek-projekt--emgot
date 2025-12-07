@@ -13,13 +13,13 @@ static inline int max_int(int a, int b)
     return (a > b) ? a : b;
 }
 
-// Double buffering setup
+
 static volatile uint8_t *buffer0 = (volatile uint8_t *)(VGA_DEFAULT_BASE_ADDRESS);
 static volatile uint8_t *buffer1 = (volatile uint8_t *)(VGA_DEFAULT_BASE_ADDRESS + VGA_BUFFER_SIZE);
-static volatile uint8_t *current_draw_buffer = (volatile uint8_t *)(VGA_DEFAULT_BASE_ADDRESS);  // Which buffer we're drawing to
+static volatile uint8_t *current_draw_buffer = (volatile uint8_t *)(VGA_DEFAULT_BASE_ADDRESS);  
 static int current_buffer_index = 0;
 
-// DMA Controller registers (using byte offsets for clarity)
+
 static volatile uint8_t *dma_controller_base = (volatile uint8_t *)(VGA_DMA_BASE);
 
 static int screen_buffer_width = VGA_DEFAULT_WIDTH;

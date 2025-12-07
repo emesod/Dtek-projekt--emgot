@@ -1,16 +1,9 @@
 // This code was written by Algot
+
 #include <stdint.h>
 
-// Bird sprite: 30x30 pixels, RGB332 format
-// Side-view bird facing right (like Flappy Bird style)
-// Colors used:
-// 0x00 = Black/transparent
-// 0xFC = Yellow (rgb332(7,7,0)) - body and head
-// 0xE0 = Red (rgb332(7,0,0)) - beak
-// 0xD4 = Dark yellow (rgb332(5,5,0)) - wing shading
-// 0xFF = White (rgb332(7,7,3)) - eye highlight
-// 0x03 = Dark blue (rgb332(0,0,3)) - eye pupil
 
+//bird sprite here was generated (we did not type 900 hexadecimals ourselves)
 const uint8_t bird_sprite[30 * 30] = {
     // Row 0-4 (empty sky)
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
