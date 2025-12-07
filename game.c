@@ -1,3 +1,4 @@
+// this code was mostly written by Emelie, however, Algot helped in checking for errors.
 #include "graphics.h"
 #include "settings.h"
 #include "dtekv-lib.h"

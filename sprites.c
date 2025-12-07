@@ -1,3 +1,4 @@
+// This code was written by Algot
 #include <stdint.h>
 
 const uint8_t test_sprite[30 * 30] = {

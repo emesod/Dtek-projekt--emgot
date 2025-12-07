@@ -1,3 +1,4 @@
+// This code was written by Algot
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 

@@ -1,3 +1,4 @@
+// Algot and Emelie worked together on this code 
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
