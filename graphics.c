@@ -1,3 +1,4 @@
+// this code was written by Algot
 #include "graphics.h"
 #include <stdint.h>
 #include <stddef.h>

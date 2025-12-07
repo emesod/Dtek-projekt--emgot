@@ -1,3 +1,4 @@
+// This code was written by Emelie
 #ifndef SPRITES_H
 #define SPRITES_H
 

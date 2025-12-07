@@ -1,3 +1,4 @@
+// This code was written by Algot
 #include <stdint.h>
 
 // Bird sprite: 30x30 pixels, RGB332 format
